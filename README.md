@@ -1,13 +1,13 @@
 # Kubernetes Operator Tutorial
 
-Some context on the different branches of the project.
+## Some context on the different branches of the project
 Branch | Purpose | Article
 ------ | ------- | -------
 operator-v1 | First version of the Kubernetes operator | [Build a Kubernetes Operator in 10 minutes](https://medium.com/better-programming/build-a-kubernetes-operator-in-10-minutes-11eec1492d30)
 operator-v2 | Second version of the Kubernetes operator with color status | [Write Tests for your Kubernetes Operator](#)
 tests | Second version of the Kubernetes operator with unit and integration tests | [Write Tests for your Kubernetes Operator](#)
 
-Overview of the operator's functioning
+## Overview of the operator's functioning
 <p><img src="doc/overview.png" alt="operator-overview" width="700px"/></p>
 
 ## Getting Started
