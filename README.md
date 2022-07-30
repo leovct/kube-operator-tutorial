@@ -7,6 +7,9 @@ operator-v1 | First version of the Kubernetes operator | [Build a Kubernetes Ope
 operator-v2 | Second version of the Kubernetes operator with color status | [Write Tests for your Kubernetes Operator](#)
 tests | Second version of the Kubernetes operator with unit and integration tests | [Write Tests for your Kubernetes Operator](#)
 
+Overview of the operator's functioning
+<p><img src="doc/overview.png" alt="operator-overview" width="700px"/></p>
+
 ## Getting Started
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
 **Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
