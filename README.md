@@ -1,5 +1,11 @@
-# Build a Kubernetes Operator in 10 minutes
-The `operator-v1` branch refers to my Medium article "[Build a Kubernetes Operator in 10 minutes](https://medium.com/better-programming/build-a-kubernetes-operator-in-10-minutes-11eec1492d30)".
+# Kubernetes Operator Tutorial
+
+Some context on the different branches of the project.
+Branch | Purpose | Article
+------ | ------- | -------
+operator-v1 | First version of the Kubernetes operator | [Build a Kubernetes Operator in 10 minutes](https://medium.com/better-programming/build-a-kubernetes-operator-in-10-minutes-11eec1492d30)
+operator-v2 | Second version of the Kubernetes operator with color status | [Write Tests for your Kubernetes Operator](#)
+tests | Second version of the Kubernetes operator with unit and integration tests | [Write Tests for your Kubernetes Operator](#)
 
 ## Getting Started
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
