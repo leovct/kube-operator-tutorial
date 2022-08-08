@@ -1,11 +1,12 @@
 # Kubernetes Operator Tutorial
+If you want to know more about Kubernetes operators, I invite you to browse [this list of articles](https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6) I have written on the subject.
 
 ## Some context on the different branches of the project
 Branch | Purpose | Article
 ------ | ------- | -------
 operator-v1 | First version of the Kubernetes operator | [Build a Kubernetes Operator in 10 minutes](https://medium.com/better-programming/build-a-kubernetes-operator-in-10-minutes-11eec1492d30)
-operator-v2 | Second version of the Kubernetes operator with color status | [Write Tests for your Kubernetes Operator](#)
-tests | Second version of the Kubernetes operator with unit and integration tests | [Write Tests for your Kubernetes Operator](#)
+operator-v2 | Second version of the Kubernetes operator with color status | [How to Write Tests for your Kubernetes Operator](https://betterprogramming.pub/write-tests-for-your-kubernetes-operator-d3d6a9530840)
+tests | Second version of the Kubernetes operator with unit and integration tests | [How to Write Tests for your Kubernetes Operator](https://betterprogramming.pub/write-tests-for-your-kubernetes-operator-d3d6a9530840)
 
 ## Overview of the operator's functioning
 <p><img src="doc/overview.png" alt="operator-overview" width="700px"/></p>
