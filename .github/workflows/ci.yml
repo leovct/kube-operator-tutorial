@@ -27,7 +27,8 @@ jobs:
         run: |
           sudo apt install jq
           export paths=$(ls | grep 'operator-v*')
-          echo $paths | jq -R -s -c 'split("\n")[:-1]' >> $GITHUB_OUTPUT
+          printf '%s\n' "$paths" | jq -R . | jq -cs .
+#          echo $paths | jq -R -s -c 'split("\n")[:-1]' >> $GITHUB_OUTPUT
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
