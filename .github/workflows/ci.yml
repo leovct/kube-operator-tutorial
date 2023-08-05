@@ -58,11 +58,12 @@ jobs:
         run: golangci-lint run --fix --timeout 5m
         working-directory: ${{ matrix.folder-path }}
       
-      - name: Install shadow
-        run: go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@${{ env.GOPLS_VERSION }}
-      - name: Run shadow
-        run: shadow ./...
-        working-directory: ${{ matrix.folder-path }}
+      # Those steps are commented because they require go1.18.
+      #- name: Install shadow
+      #  run: go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest
+      #- name: Run shadow
+      #  run: shadow ./...
+      #  working-directory: ${{ matrix.folder-path }}
 
   build:
     name: build
