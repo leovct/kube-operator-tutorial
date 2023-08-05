@@ -29,7 +29,7 @@ jobs:
         run: echo "matrix=$(ls | grep 'operator-v*' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
   lint-build-test:
-    name: lint
+    name: lint-build-test
     needs: prep-matrix
     runs-on: ubuntu-latest
     strategy:
