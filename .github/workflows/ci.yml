@@ -23,6 +23,7 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v3
       - name: Set matrix
+        id: set-matrix
         run: |
           sudo apt install jq
           export paths=$(ls | grep 'operator-v*')
