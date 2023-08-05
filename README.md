@@ -61,7 +61,7 @@ diff --color -r operator-v1/controllers/foo_controller.go operator-v2/controller
 
 ### `v2` <> `v2-with-tests`
 
-```sh
+```diff
 $ diff -r operator-v2 operator-v2-with-tests
 diff --color -r operator-v2/README.md operator-v2-with-tests/README.md
 1c1
