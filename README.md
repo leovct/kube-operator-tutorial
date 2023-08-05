@@ -14,6 +14,7 @@ Below, you'll find the mapping of each tutorial article to its corresponding cod
 Directory | Purpose | Article
 ------ | ------- | -------
 `operator-v1` | First version of the Kubernetes operator | [Build a Kubernetes Operator in 10 minutes](https://medium.com/better-programming/build-a-kubernetes-operator-in-10-minutes-11eec1492d30)
+`operator-v2` | Second version of the Kubernetes operator with color status | [How to Write Tests for your Kubernetes Operator](https://betterprogramming.pub/write-tests-for-your-kubernetes-operator-d3d6a9530840)
 
 Happy coding and learning! 🚀
 
