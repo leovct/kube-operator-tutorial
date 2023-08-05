@@ -14,6 +14,7 @@ concurrency:
 
 env:
   GO_VERSION: 1.17
+  GOPLS_VERSION: 0.12 # last version to support go1.17 (https://github.com/golang/tools/releases/tag/gopls%2Fv0.12.0)
 
 jobs:
   prep-matrix:
@@ -26,7 +27,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Set matrix
         id: set-matrix
-        run: echo "::set-output name=matrix::$(ls | grep 'operator-v*' | jq -R -s -c 'split("\n")[:-1]')"
+        run: echo "matrix=$(ls | grep 'operator-v*' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
   lint:
     name: lint
@@ -58,7 +59,7 @@ jobs:
         working-directory: ${{ matrix.folder-path }}
       
       - name: Install shadow
-        run: go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest
+        run: go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@${{ env.GOPLS_VERSION }}
       - name: Run shadow
         run: shadow ./...
         working-directory: ${{ matrix.folder-path }}
