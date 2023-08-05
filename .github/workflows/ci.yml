@@ -26,10 +26,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Set matrix
         id: set-matrix
-        run: |
-          sudo apt install jq
-          export paths=$(ls | grep 'operator-v*')
-          printf '%s\n' "$paths" | jq -R . | jq -cs '{"include": .}' >> $GITHUB_OUTPUT
+        run: echo "::set-output name=matrix::$(ls | grep 'operator-v*' | jq -R -s -c 'split("\n")[:-1]')"
 
   lint:
     name: lint
@@ -38,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        folder-path: ${{fromJson(needs.prep-matrix.outputs.matrix)}}
+        folder-path: ${{ fromJson(needs.prep-matrix.outputs.matrix) }}
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -73,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        folder-path: ${{fromJson(needs.prep-matrix.outputs.matrix)}}
+        folder-path: ${{ fromJson(needs.prep-matrix.outputs.matrix) }}
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -93,7 +90,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        folder-path: ${{fromJson(needs.prep-matrix.outputs.matrix)}}
+        folder-path: ${{ fromJson(needs.prep-matrix.outputs.matrix) }}
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
