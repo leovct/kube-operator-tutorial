@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
     paths-ignore:
-      - 'docs/**'
+      - 'doc/**'
       - 'README.md'
 
 concurrency:
@@ -28,7 +28,6 @@ jobs:
           sudo apt install jq
           export paths=$(ls | grep 'operator-v*')
           printf '%s\n' "$paths" | jq -R . | jq -cs .
-#          echo $paths | jq -R -s -c 'split("\n")[:-1]' >> $GITHUB_OUTPUT
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
@@ -69,7 +68,7 @@ jobs:
 
   build:
     name: build
-    needs: [prep-matrix, lint]
+    needs: lint
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -89,7 +88,7 @@ jobs:
 
   test:
     name: test
-    needs: [prep-matrix, lint]
+    needs: lint
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
