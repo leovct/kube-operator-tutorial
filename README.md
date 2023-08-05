@@ -1,4 +1,4 @@
-# ☸️ Kubernetes Operator Tutorial
+# 🛠️ Build a Kubernetes Operator in 10 minutes
 
 ## Table of Contents
 
@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Welcome to `Kubernetes Operators 101`. This repository serves as a valuable reference for all tutorial followers aspiring to master the art of building Kubernetes Operators. Here, you will find the complete source code and resources used in the [articles](https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6).
+This repository serves as a valuable reference for all tutorial followers aspiring to master the art of building Kubernetes Operators. Here, you will find the complete source code and resources used in the [articles](https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6).
 
 Below, you'll find the mapping of each tutorial article to its corresponding code directory.
 
