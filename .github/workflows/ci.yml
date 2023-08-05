@@ -1,0 +1,103 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: 1.17
+
+jobs:
+  prep-matrix:
+    name: prep-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Set matrix
+        run: ls | grep 'operator-v*' >> $GITHUB_OUTPUT
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  lint:
+    name: lint
+    needs: prep-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        folder-path: ${{fromJson(needs.prep-matrix.outputs.matrix)}}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Install go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Run go fmt
+        run: go fmt ./...
+        working-directory: ${{ matrix.folder-path }}
+      - name: Run go vet
+        run: go vet ./...
+        working-directory: ${{ matrix.folder-path }}
+
+      - name: Install golangci-lint
+        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+      - name: Run golangci-lint
+        run: golangci-lint run --fix --timeout 5m
+        working-directory: ${{ matrix.folder-path }}
+      
+      - name: Install shadow
+        run: go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest
+      - name: Run shadow
+        run: shadow ./...
+        working-directory: ${{ matrix.folder-path }}
+
+  build:
+    name: build
+    needs: [prep-matrix, lint]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        folder-path: ${{fromJson(needs.prep-matrix.outputs.matrix)}}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Install go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      
+      - name: Build binary
+        run: make build
+        working-directory: ${{ matrix.folder-path }}
+
+  test:
+    name: test
+    needs: [prep-matrix, lint]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        folder-path: ${{fromJson(needs.prep-matrix.outputs.matrix)}}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Install go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      
+      - name: Run tests
+        run: make test
+        working-directory: ${{ matrix.folder-path }}
