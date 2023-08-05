@@ -23,7 +23,10 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v3
       - name: Set matrix
-        run: ls | grep 'operator-v*' >> $GITHUB_OUTPUT
+        run: |
+          sudo apt install jq
+          export paths=$(ls | grep 'operator-v*')
+          echo $paths | jq -R -s -c 'split("\n")[:-1]' >> $GITHUB_OUTPUT
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
