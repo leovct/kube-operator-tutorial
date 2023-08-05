@@ -14,7 +14,6 @@ concurrency:
 
 env:
   GO_VERSION: 1.17
-  GOPLS_VERSION: v0.12.0 # last version to support go1.17 (https://github.com/golang/tools/releases/tag/gopls%2Fv0.12.0)
 
 jobs:
   prep-matrix:
@@ -29,7 +28,7 @@ jobs:
         id: set-matrix
         run: echo "matrix=$(ls | grep 'operator-v*' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
-  lint:
+  lint-build-test:
     name: lint
     needs: prep-matrix
     runs-on: ubuntu-latest
@@ -65,41 +64,9 @@ jobs:
       #  run: shadow ./...
       #  working-directory: ${{ matrix.folder-path }}
 
-  build:
-    name: build
-    needs: lint
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        folder-path: ${{ fromJson(needs.prep-matrix.outputs.matrix) }}
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v3
-      - name: Install go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      
       - name: Build binary
         run: make build
         working-directory: ${{ matrix.folder-path }}
-
-  test:
-    name: test
-    needs: lint
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        folder-path: ${{ fromJson(needs.prep-matrix.outputs.matrix) }}
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v3
-      - name: Install go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
       
       - name: Run tests
         run: make test
