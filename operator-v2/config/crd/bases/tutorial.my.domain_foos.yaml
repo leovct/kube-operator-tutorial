@@ -43,6 +43,9 @@ spec:
           status:
             description: FooStatus defines the observed state of Foo
             properties:
+              colour:
+                description: Foo's favorite colour
+                type: string
               happy:
                 description: Happy will be set to true if Foo found a friend
                 type: boolean
