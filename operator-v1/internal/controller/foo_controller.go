@@ -1,5 +1,5 @@
 /*
-Copyright 2022.
+Copyright 2023.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controllers
+package controller
 
 import (
 	"context"
@@ -24,10 +24,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/controller-runtime/pkg/source"
 
 	tutorialv1 "my.domain/tutorial/api/v1"
 )
@@ -41,7 +39,6 @@ type FooReconciler struct {
 // RBAC permissions to monitor foo custom resources
 //+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos/finalizers,verbs=update
 
 // RBAC permissions to monitor pods
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
@@ -89,10 +86,6 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 func (r *FooReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&tutorialv1.Foo{}).
-		Watches(
-			&source.Kind{Type: &corev1.Pod{}},
-			handler.EnqueueRequestsFromMapFunc(r.mapPodsReqToFooReq),
-		).
 		Complete(r)
 }
 
@@ -103,7 +96,7 @@ func (r *FooReconciler) mapPodsReqToFooReq(obj client.Object) []reconcile.Reques
 	// List all the Foo custom resource
 	req := []reconcile.Request{}
 	var list tutorialv1.FooList
-	if err := r.Client.List(context.TODO(), &list); err != nil {
+	if err := r.Client.List(ctx, &list); err != nil {
 		log.Error(err, "unable to list foo custom resources")
 	} else {
 		// Only keep Foo custom resources related to the Pod that triggered the reconciliation request

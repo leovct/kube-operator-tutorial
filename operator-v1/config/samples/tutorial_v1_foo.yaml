@@ -1,0 +1,12 @@
+apiVersion: tutorial.my.domain/v1
+kind: Foo
+metadata:
+  labels:
+    app.kubernetes.io/name: foo
+    app.kubernetes.io/instance: foo-sample
+    app.kubernetes.io/part-of: operator-v1
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator-v1
+  name: foo-sample
+spec:
+  # TODO(user): Add fields here
