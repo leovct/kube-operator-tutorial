@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.8.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.13.0
   name: foos.tutorial.my.domain
 spec:
   group: tutorial.my.domain
@@ -44,9 +43,6 @@ spec:
           status:
             description: FooStatus defines the observed state of Foo
             properties:
-              colour:
-                description: Foo's favorite colour
-                type: string
               happy:
                 description: Happy will be set to true if Foo found a friend
                 type: boolean
@@ -56,9 +52,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

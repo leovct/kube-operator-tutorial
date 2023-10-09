@@ -12,19 +12,19 @@ You’ll need a Kubernetes cluster to run against. You can use [KIND](https://si
 1. Install Instances of Custom Resources:
 
 ```sh
-kubectl apply -f config/samples/
+kubectl apply -k config/samples/
 ```
 
 2. Build and push your image to the location specified by `IMG`:
-	
+
 ```sh
-make docker-build docker-push IMG=<some-registry>/tutorial:tag
+make docker-build docker-push IMG=<some-registry>/operator-v2:tag
 ```
-	
+
 3. Deploy the controller to the cluster with the image specified by `IMG`:
 
 ```sh
-make deploy IMG=<some-registry>/tutorial:tag
+make deploy IMG=<some-registry>/operator-v2:tag
 ```
 
 ### Uninstall CRDs
@@ -35,7 +35,7 @@ make uninstall
 ```
 
 ### Undeploy controller
-UnDeploy the controller to the cluster:
+UnDeploy the controller from the cluster:
 
 ```sh
 make undeploy
@@ -45,10 +45,10 @@ make undeploy
 // TODO(user): Add detailed information on how you would like others to contribute to this project
 
 ### How it works
-This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
+This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
 
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/) 
-which provides a reconcile function responsible for synchronizing resources untile the desired state is reached on the cluster 
+It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/),
+which provide a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster.
 
 ### Test It Out
 1. Install the CRDs into the cluster:
@@ -78,7 +78,7 @@ More information can be found via the [Kubebuilder Documentation](https://book.k
 
 ## License
 
-Copyright 2022.
+Copyright 2023.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
