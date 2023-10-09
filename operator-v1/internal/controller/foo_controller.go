@@ -110,7 +110,7 @@ func (r *FooReconciler) mapPodsReqToFooReq(ctx context.Context, pod client.Objec
 				req = append(req, reconcile.Request{
 					NamespacedName: types.NamespacedName{Name: item.Name, Namespace: item.Namespace},
 				})
-				log.Info("pod linked to a foo custom resource issued an event", "name", obj.GetName())
+				log.Info("pod linked to a foo custom resource issued an event", "name", pod.GetName())
 			}
 		}
 	}
