@@ -24,6 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
@@ -75,8 +76,9 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 	if err := r.Status().Update(ctx, &foo); err != nil {
 		log.Error(err, "unable to update foo's happy status", "status", friendFound)
 		return ctrl.Result{}, err
+	} else {
+		log.Info("foo's happy status updated", "status", friendFound)
 	}
-	log.Info("foo's happy status updated", "status", friendFound)
 
 	log.Info("foo custom resource reconciled")
 	return ctrl.Result{}, nil
@@ -86,11 +88,14 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 func (r *FooReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&tutorialv1.Foo{}).
+		Watches(
+			&corev1.Pod{},
+			handler.EnqueueRequestsFromMapFunc(r.mapPodsReqToFooReq),
+		).
 		Complete(r)
 }
 
-func (r *FooReconciler) mapPodsReqToFooReq(obj client.Object) []reconcile.Request {
-	ctx := context.Background()
+func (r *FooReconciler) mapPodsReqToFooReq(ctx context.Context, pod client.Object) []reconcile.Request {
 	log := log.FromContext(ctx)
 
 	// List all the Foo custom resource
@@ -101,7 +106,7 @@ func (r *FooReconciler) mapPodsReqToFooReq(obj client.Object) []reconcile.Reques
 	} else {
 		// Only keep Foo custom resources related to the Pod that triggered the reconciliation request
 		for _, item := range list.Items {
-			if item.Spec.Name == obj.GetName() {
+			if item.Spec.Name == pod.GetName() {
 				req = append(req, reconcile.Request{
 					NamespacedName: types.NamespacedName{Name: item.Name, Namespace: item.Namespace},
 				})
