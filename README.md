@@ -1,5 +1,7 @@
 # 🛠️ Build a Kubernetes Operator in 10 minutes
 
+> **👋 The source code has been updated in early October 2023 to use the latest version of kubebuilder ([v3.12.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v3.12.0)). Expect the code to be kept up to date with the latest kubebuilder releases!**
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -43,7 +45,7 @@ diff --color -r operator-v1/README.md operator-v2/README.md
 > # operator-v2
 diff --color -r operator-v1/api/v1/foo_types.go operator-v2/api/v1/foo_types.go
 32a33,35
-> 
+>
 >       // Foo's favorite colour
 >       Colour string `json:"colour,omitempty"`
 Only in operator-v2: color
@@ -75,7 +77,7 @@ diff --color -r operator-v2/controllers/suite_test.go operator-v2-with-tests/con
 >       "context"
 22a24,25
 >       ctrl "sigs.k8s.io/controller-runtime"
-> 
+>
 40,42c43,49
 < var cfg *rest.Config
 < var k8sClient client.Client
@@ -96,13 +98,13 @@ diff --color -r operator-v2/controllers/suite_test.go operator-v2-with-tests/con
 >               Scheme: scheme.Scheme,
 >       })
 >       Expect(err).ToNot(HaveOccurred())
-> 
+>
 >       err = (&FooReconciler{
 >               Client: k8sManager.GetClient(),
 >               Scheme: k8sManager.GetScheme(),
 >       }).SetupWithManager(k8sManager)
 >       Expect(err).ToNot(HaveOccurred())
-> 
+>
 >       go func() {
 >               defer GinkgoRecover()
 >               err = k8sManager.Start(ctx)

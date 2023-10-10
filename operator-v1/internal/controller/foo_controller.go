@@ -1,5 +1,5 @@
 /*
-Copyright 2022.
+Copyright 2023.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controllers
+package controller
 
 import (
 	"context"
@@ -27,7 +27,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/controller-runtime/pkg/source"
 
 	tutorialv1 "my.domain/tutorial/api/v1"
 )
@@ -41,7 +40,6 @@ type FooReconciler struct {
 // RBAC permissions to monitor foo custom resources
 //+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos/finalizers,verbs=update
 
 // RBAC permissions to monitor pods
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
@@ -78,8 +76,9 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 	if err := r.Status().Update(ctx, &foo); err != nil {
 		log.Error(err, "unable to update foo's happy status", "status", friendFound)
 		return ctrl.Result{}, err
+	} else {
+		log.Info("foo's happy status updated", "status", friendFound)
 	}
-	log.Info("foo's happy status updated", "status", friendFound)
 
 	log.Info("foo custom resource reconciled")
 	return ctrl.Result{}, nil
@@ -90,29 +89,28 @@ func (r *FooReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&tutorialv1.Foo{}).
 		Watches(
-			&source.Kind{Type: &corev1.Pod{}},
+			&corev1.Pod{},
 			handler.EnqueueRequestsFromMapFunc(r.mapPodsReqToFooReq),
 		).
 		Complete(r)
 }
 
-func (r *FooReconciler) mapPodsReqToFooReq(obj client.Object) []reconcile.Request {
-	ctx := context.Background()
+func (r *FooReconciler) mapPodsReqToFooReq(ctx context.Context, pod client.Object) []reconcile.Request {
 	log := log.FromContext(ctx)
 
 	// List all the Foo custom resource
 	req := []reconcile.Request{}
 	var list tutorialv1.FooList
-	if err := r.Client.List(context.TODO(), &list); err != nil {
+	if err := r.Client.List(ctx, &list); err != nil {
 		log.Error(err, "unable to list foo custom resources")
 	} else {
 		// Only keep Foo custom resources related to the Pod that triggered the reconciliation request
 		for _, item := range list.Items {
-			if item.Spec.Name == obj.GetName() {
+			if item.Spec.Name == pod.GetName() {
 				req = append(req, reconcile.Request{
 					NamespacedName: types.NamespacedName{Name: item.Name, Namespace: item.Namespace},
 				})
-				log.Info("pod linked to a foo custom resource issued an event", "name", obj.GetName())
+				log.Info("pod linked to a foo custom resource issued an event", "name", pod.GetName())
 			}
 		}
 	}
