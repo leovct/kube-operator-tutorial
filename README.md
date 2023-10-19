@@ -44,21 +44,23 @@ diff --color -r operator-v1/README.md operator-v2/README.md
 ---
 > # operator-v2
 diff --color -r operator-v1/api/v1/foo_types.go operator-v2/api/v1/foo_types.go
-32a33,35
+33a34,36
 >
->       // Foo's favorite colour
->       Colour string `json:"colour,omitempty"`
-Only in operator-v2: color
+> 	// Foo's favorite colour
+> 	Colour string `json:"colour,omitempty"`
+Binary files operator-v1/bin/kustomize and operator-v2/bin/kustomize differ
+Binary files operator-v1/bin/setup-envtest and operator-v2/bin/setup-envtest differ
 diff --color -r operator-v1/config/crd/bases/tutorial.my.domain_foos.yaml operator-v2/config/crd/bases/tutorial.my.domain_foos.yaml
-46a47,49
+45a46,48
 >               colour:
 >                 description: Foo's favorite colour
 >                 type: string
-diff --color -r operator-v1/controllers/foo_controller.go operator-v2/controllers/foo_controller.go
-32a33
->       color "my.domain/tutorial/color"
-77a79
->       foo.Status.Colour = color.ConvertStrToColor(foo.Name + foo.Namespace)
+Only in operator-v2/internal: color
+diff --color -r operator-v1/internal/controller/foo_controller.go operator-v2/internal/controller/foo_controller.go
+31a32
+> 	"my.domain/tutorial/internal/color"
+75a77
+> 	foo.Status.Colour = color.ConvertStrToColor(foo.Name + foo.Namespace)
 ```
 
 ### `v2` <> `v2-with-tests`
@@ -70,46 +72,52 @@ diff --color -r operator-v2/README.md operator-v2-with-tests/README.md
 < # operator-v2
 ---
 > # operator-v2-with-tests
-Only in operator-v2-with-tests/color: color_test.go
-Only in operator-v2-with-tests/controllers: foo_controller_test.go
-diff --color -r operator-v2/controllers/suite_test.go operator-v2-with-tests/controllers/suite_test.go
+Only in operator-v2-with-tests/bin: manager
+diff --color -r operator-v2/go.mod operator-v2-with-tests/go.mod
+7a8
+> 	k8s.io/api v0.28.0
+64d64
+< 	k8s.io/api v0.28.0 // indirect
+Only in operator-v2-with-tests/internal/color: color_test.go
+Only in operator-v2-with-tests/internal/controller: foo_controller_test.go
+diff --color -r operator-v2/internal/controller/suite_test.go operator-v2-with-tests/internal/controller/suite_test.go
 19a20
->       "context"
-22a24,25
->       ctrl "sigs.k8s.io/controller-runtime"
+> 	"context"
+24a26,27
+> 	ctrl "sigs.k8s.io/controller-runtime"
 >
-40,42c43,49
+42,44c45,51
 < var cfg *rest.Config
 < var k8sClient client.Client
 < var testEnv *envtest.Environment
 ---
 > var (
->       cfg       *rest.Config
->       k8sClient client.Client
->       testEnv   *envtest.Environment
->       ctx       context.Context
->       cancel    context.CancelFunc
+> 	cfg       *rest.Config
+> 	k8sClient client.Client
+> 	testEnv   *envtest.Environment
+> 	ctx       context.Context
+> 	cancel    context.CancelFunc
 > )
 53a61
->       ctx, cancel = context.WithCancel(context.TODO())
-75a84,100
->       // Register and start the Foo controller
->       k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{
->               Scheme: scheme.Scheme,
->       })
->       Expect(err).ToNot(HaveOccurred())
+> 	ctx, cancel = context.WithCancel(context.TODO())
+83a92,108
+> 	// Register and start the Foo controller
+> 	k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{
+> 		Scheme: scheme.Scheme,
+> 	})
+> 	Expect(err).ToNot(HaveOccurred())
 >
->       err = (&FooReconciler{
->               Client: k8sManager.GetClient(),
->               Scheme: k8sManager.GetScheme(),
->       }).SetupWithManager(k8sManager)
->       Expect(err).ToNot(HaveOccurred())
+> 	err = (&FooReconciler{
+> 		Client: k8sManager.GetClient(),
+> 		Scheme: k8sManager.GetScheme(),
+> 	}).SetupWithManager(k8sManager)
+> 	Expect(err).ToNot(HaveOccurred())
 >
->       go func() {
->               defer GinkgoRecover()
->               err = k8sManager.Start(ctx)
->               Expect(err).ToNot(HaveOccurred(), "failed to run manager")
->       }()
-78a104
->       cancel()
+> 	go func() {
+> 		defer GinkgoRecover()
+> 		err = k8sManager.Start(ctx)
+> 		Expect(err).ToNot(HaveOccurred(), "failed to run manager")
+> 	}()
+86a112
+> 	cancel()
 ```
