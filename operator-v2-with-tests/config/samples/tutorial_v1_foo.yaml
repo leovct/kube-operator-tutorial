@@ -4,9 +4,9 @@ metadata:
   labels:
     app.kubernetes.io/name: foo
     app.kubernetes.io/instance: foo-sample
-    app.kubernetes.io/part-of: operator-v2
+    app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: operator-v2
+    app.kubernetes.io/created-by: operator
   name: foo-sample
 spec:
   # TODO(user): Add fields here
