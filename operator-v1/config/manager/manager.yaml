@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/name: namespace
     app.kubernetes.io/instance: system
     app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: operator
-    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/created-by: operator-v1
+    app.kubernetes.io/part-of: operator-v1
     app.kubernetes.io/managed-by: kustomize
   name: system
 ---
@@ -21,8 +21,8 @@ metadata:
     app.kubernetes.io/name: deployment
     app.kubernetes.io/instance: controller-manager
     app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: operator
-    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/created-by: operator-v1
+    app.kubernetes.io/part-of: operator-v1
     app.kubernetes.io/managed-by: kustomize
 spec:
   selector:
@@ -76,7 +76,7 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-              - "ALL"
+            - "ALL"
         livenessProbe:
           httpGet:
             path: /healthz
