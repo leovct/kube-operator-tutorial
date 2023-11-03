@@ -27,6 +27,12 @@ rules:
 - apiGroups:
   - tutorial.my.domain
   resources:
+  - foos/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - tutorial.my.domain
+  resources:
   - foos/status
   verbs:
   - get

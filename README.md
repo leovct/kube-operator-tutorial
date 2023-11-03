@@ -38,46 +38,39 @@ Below are examples of `diff` outputs between different versions of the operator.
 
 ```diff
 $ diff -r operator-v1 operator-v2
-diff --color -r operator-v1/README.md operator-v2/README.md
-1c1
-< # operator-v1
----
-> # operator-v2
 diff --color -r operator-v1/api/v1/foo_types.go operator-v2/api/v1/foo_types.go
 33a34,36
 >
 > 	// Foo's favorite colour
 > 	Colour string `json:"colour,omitempty"`
-Binary files operator-v1/bin/kustomize and operator-v2/bin/kustomize differ
-Binary files operator-v1/bin/setup-envtest and operator-v2/bin/setup-envtest differ
+Only in operator-v2/bin: k8s
+Only in operator-v1/bin: kustomize
+Binary files operator-v1/bin/manager and operator-v2/bin/manager differ
+Only in operator-v2/bin: setup-envtest
 diff --color -r operator-v1/config/crd/bases/tutorial.my.domain_foos.yaml operator-v2/config/crd/bases/tutorial.my.domain_foos.yaml
 45a46,48
 >               colour:
 >                 description: Foo's favorite colour
 >                 type: string
+Only in operator-v2: cover.out
 Only in operator-v2/internal: color
 diff --color -r operator-v1/internal/controller/foo_controller.go operator-v2/internal/controller/foo_controller.go
 31a32
 > 	"my.domain/tutorial/internal/color"
-75a77
+76a78
 > 	foo.Status.Colour = color.ConvertStrToColor(foo.Name + foo.Namespace)
+diff --color -r operator-v1/internal/controller/suite_test.go operator-v2/internal/controller/suite_test.go
+66c66
+< 			fmt.Sprintf("1.28.3-%s-%s", runtime.GOOS, runtime.GOARCH)),
+---
+> 			fmt.Sprintf("1.28.0-%s-%s", runtime.GOOS, runtime.GOARCH)),
 ```
 
 ### `v2` <> `v2-with-tests`
 
 ```diff
 $ diff -r operator-v2 operator-v2-with-tests
-diff --color -r operator-v2/README.md operator-v2-with-tests/README.md
-1c1
-< # operator-v2
----
-> # operator-v2-with-tests
-Only in operator-v2-with-tests/bin: manager
-diff --color -r operator-v2/go.mod operator-v2-with-tests/go.mod
-7a8
-> 	k8s.io/api v0.28.0
-64d64
-< 	k8s.io/api v0.28.0 // indirect
+Binary files operator-v2/bin/manager and operator-v2-with-tests/bin/manager differ
 Only in operator-v2-with-tests/internal/color: color_test.go
 Only in operator-v2-with-tests/internal/controller: foo_controller_test.go
 diff --color -r operator-v2/internal/controller/suite_test.go operator-v2-with-tests/internal/controller/suite_test.go
@@ -100,6 +93,10 @@ diff --color -r operator-v2/internal/controller/suite_test.go operator-v2-with-t
 > )
 53a61
 > 	ctx, cancel = context.WithCancel(context.TODO())
+66c74
+< 			fmt.Sprintf("1.28.0-%s-%s", runtime.GOOS, runtime.GOARCH)),
+---
+> 			fmt.Sprintf("1.28.3-%s-%s", runtime.GOOS, runtime.GOARCH)),
 83a92,108
 > 	// Register and start the Foo controller
 > 	k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{

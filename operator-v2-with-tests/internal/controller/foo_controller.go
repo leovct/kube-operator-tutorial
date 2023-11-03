@@ -41,6 +41,7 @@ type FooReconciler struct {
 // RBAC permissions to monitor foo custom resources
 //+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=tutorial.my.domain,resources=foos/finalizers,verbs=update
 
 // RBAC permissions to monitor pods
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
