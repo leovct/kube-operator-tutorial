@@ -38,6 +38,11 @@ Below are examples of `diff` outputs between different versions of the operator.
 
 ```diff
 $ diff -r operator-v1 operator-v2
+diff --color -r operator-v1/README.md operator-v2/README.md
+1c1
+< # operator-v1
+---
+> # operator-v2
 diff --color -r operator-v1/api/v1/foo_types.go operator-v2/api/v1/foo_types.go
 33a34,36
 >
@@ -70,6 +75,11 @@ diff --color -r operator-v1/internal/controller/suite_test.go operator-v2/intern
 
 ```diff
 $ diff -r operator-v2 operator-v2-with-tests
+diff --color -r operator-v2/README.md operator-v2-with-tests/README.md
+1c1
+< # operator-v2
+---
+> # operator-v2-with-tests
 Binary files operator-v2/bin/manager and operator-v2-with-tests/bin/manager differ
 Only in operator-v2-with-tests/internal/color: color_test.go
 Only in operator-v2-with-tests/internal/controller: foo_controller_test.go
