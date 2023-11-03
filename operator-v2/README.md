@@ -16,7 +16,7 @@
 **Build and push your image to the location specified by `IMG`:**
 
 ```sh
-make docker-build docker-push IMG=<some-registry>/operator-v2:tag
+make docker-build docker-push IMG=<some-registry>/operator:tag
 ```
 
 **NOTE:** This image ought to be published in the personal registry you specified.
@@ -32,7 +32,7 @@ make install
 **Deploy the Manager to the cluster with the image specified by `IMG`:**
 
 ```sh
-make deploy IMG=<some-registry>/operator-v2:tag
+make deploy IMG=<some-registry>/operator:tag
 ```
 
 > **NOTE**: If you encounter RBAC errors, you may need to grant yourself cluster-admin

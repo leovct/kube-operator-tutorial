@@ -5,7 +5,7 @@
 domain: my.domain
 layout:
 - go.kubebuilder.io/v4
-projectName: operator-v1
+projectName: operator
 repo: my.domain/tutorial
 resources:
 - api:
