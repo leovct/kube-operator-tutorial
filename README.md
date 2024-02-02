@@ -196,5 +196,5 @@ kubectl delete pod jack --force
 kubectl describe foos
 
 # Now compare the diffs between the new and the old projects.
-
+# Also make sure to compare diffs between projects and keep the `README` updated!
 ```
