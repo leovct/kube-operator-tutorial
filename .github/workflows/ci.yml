@@ -3,11 +3,6 @@ name: ci
 on:
   push:
     branches: [main]
-  pull_request:
-    paths-ignore:
-      - '.github/workflows/pull_request_template.md'
-      - 'doc/**'
-      - 'README.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
