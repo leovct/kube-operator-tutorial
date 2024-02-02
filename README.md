@@ -1,6 +1,6 @@
 # 🛠️ Build a Kubernetes Operator in 10 minutes
 
-> **👋 The source code has been updated in early November 2023 to use the latest version of kubebuilder ([v3.13.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v3.13.0)). Expect the code to be kept up to date with the latest kubebuilder releases!**
+> **👋 The source code has been updated in early January 2024 to use the latest version of kubebuilder ([v3.14.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v3.14.0)). Expect the code to be kept up to date with the latest kubebuilder releases!**
 
 ## Table of Contents
 
