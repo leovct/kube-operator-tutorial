@@ -7,6 +7,7 @@
 - [Introduction](#introduction)
 - [Architecture Diagram](#architecture-diagram)
 - [Differences between versions](#differences-between-versions)
+- [Contributing](#contributing)
 
 ## Introduction
 
@@ -127,4 +128,69 @@ diff --color -r operator-v2/internal/controller/suite_test.go operator-v2-with-t
 > 	}()
 86a112
 > 	cancel()
+```
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues or reach out if you want more details! :)
+
+### Bump kubebuilder version
+
+Simple steps to follow to upgrade the tutorial to the latest `kubebuilder` version.
+
+Note: this is an example with `operator-v1`. Repeat the same steps for all the other versions of the operator...
+
+```bash
+# Scaffold the new project.
+mv operator-v1 operator-v1-old
+mkdir operator-v1
+pushd operator-v1
+kubebuilder init --domain my.domain --repo my.domain/tutorial
+kubebuilder create api --group tutorial --version v1 --kind Foo
+
+# Implement the Foo CRD (`FooSpec` and `FooStatus`).
+cat ../operator-v1-old/api/v1/foo_types.go
+vi api/v1/foo_types.go
+
+# Same thing with the controller (RBAC permissions, reconcile and setupWithManager functions).
+# Note: you may need to resolve some imports such as `corev1`.
+cat ../operator-v1-old/internal/controller/foo_controller.go
+vi internal/controller/foo_controller.go
+
+# Generate manifests.
+make manifests
+
+# Test that the new version works.
+# Note: for this step, you will need a running Kubernetes cluster.
+kind create cluster
+kubectl cluster-info --context kind-kind
+kubectl get nodes
+
+make install
+kubectl get crds
+make run
+
+cp ../operator-v1-old/config/samples/tutorial_v1_foo.yaml config/samples
+kubectl apply -k config/samples
+# Check the logs of the controller, it should detect the creation events.
+# Also check the status of the CRDs, they should be empty at this point.
+kubectl describe foos
+
+cp ../operator-v1-old/config/samples/pod.yaml config/samples
+kubectl apply -f config/samples/pod.yaml
+# Again, check the logs of the controller, it should throw some logs.
+# The foo-1 CRD should now have an happy status.
+kubectl describe foos
+
+# Update the pod name from `jack` to `joe`.
+vi config/samples/pod.yaml
+kubectl apply -f config/samples/pod.yaml
+# Both CRDs should now have an happy status.
+kubectl describe foos
+kubectl delete pod jack --force
+# Only the foo-2 CRD should have an empty status.
+kubectl describe foos
+
+# Now compare the diffs between the new and the old projects.
+
 ```
