@@ -147,6 +147,8 @@ mkdir operator-v1
 pushd operator-v1
 kubebuilder init --domain my.domain --repo my.domain/tutorial
 kubebuilder create api --group tutorial --version v1 --kind Foo
+# Change the `projectName` property to `operator`.
+vi PROJECT
 
 # Implement the Foo CRD (`FooSpec` and `FooStatus`).
 cat ../operator-v1-old/api/v1/foo_types.go
@@ -159,6 +161,8 @@ vi internal/controller/foo_controller.go
 
 # Generate manifests.
 make manifests
+# Change all occurences of `operator-v1` to `operator`.
+# But make sure to keep the `operator-v1` title in `README.md`.
 
 # Test that the new version works.
 # Note: for this step, you will need a running Kubernetes cluster.
