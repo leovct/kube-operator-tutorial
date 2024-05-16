@@ -141,28 +141,10 @@ Simple steps to follow to upgrade the tutorial to the latest `kubebuilder` versi
 Note: this is an example with `operator-v1`. Repeat the same steps for all the other versions of the operator...
 
 ```bash
-# Scaffold the new project.
-mv operator-v1 operator-v1-old
-mkdir operator-v1
-pushd operator-v1
-kubebuilder init --domain my.domain --repo my.domain/tutorial
-kubebuilder create api --group tutorial --version v1 --kind Foo
-# Change the `projectName` property to `operator`.
-vi PROJECT
-
-# Implement the Foo CRD (`FooSpec` and `FooStatus`).
-cat ../operator-v1-old/api/v1/foo_types.go
-vi api/v1/foo_types.go
-
-# Same thing with the controller (RBAC permissions, reconcile and setupWithManager functions).
-# Note: you may need to resolve some imports such as `corev1`.
-cat ../operator-v1-old/internal/controller/foo_controller.go
-vi internal/controller/foo_controller.go
-
-# Generate manifests.
-make manifests
-# Change all occurences of `operator-v1` to `operator`.
-# But make sure to keep the `operator-v1` title in `README.md`.
+# Scaffold the new projects.
+./scripts/upgrade.sh operator-v1
+./scripts/upgrade.sh operator-v2
+./scripts/upgrade.sh operator-v2-with-tests
 
 # Test that the new version works.
 # Note: for this step, you will need a running Kubernetes cluster.
