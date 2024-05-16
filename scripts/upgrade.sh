@@ -27,7 +27,9 @@ scaffold_project() {
 
   kubebuilder init --domain my.domain --repo my.domain/tutorial
   kubebuilder create api --group tutorial --version v1 --kind Foo
-  find operator-v1 -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md" \) ! -name "README.md" ! -name "PROJECT" -exec sed -i '' 's/operator-v1/operator/g' {} +
+
+  find operator-v1 -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md"  -o -name "README.md" -o -name "PROJECT" \) -exec sed -i '' 's/operator-v1/operator/g' {} +
+  sed -i '' 's/# operator/# operator-v1/g' operator-v1/README.md
 
   echo "Project scaffolded successfully."
 }
