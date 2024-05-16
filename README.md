@@ -156,13 +156,11 @@ make install
 kubectl get crds
 make run
 
-cp ../operator-v1-old/config/samples/tutorial_v1_foo.yaml config/samples
 kubectl apply -k config/samples
 # Check the logs of the controller, it should detect the creation events.
 # Also check the status of the CRDs, they should be empty at this point.
 kubectl describe foos
 
-cp ../operator-v1-old/config/samples/pod.yaml config/samples
 kubectl apply -f config/samples/pod.yaml
 # Again, check the logs of the controller, it should throw some logs.
 # The foo-1 CRD should now have an happy status.
