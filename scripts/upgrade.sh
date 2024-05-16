@@ -82,5 +82,8 @@ wait_for_user_confirmation
 echo "Generating manifests..."
 make manifests
 
+echo "Building binary..."
+make build
+
 popd > /dev/null
 echo "Script completed successfully."
