@@ -1,8 +1,11 @@
 #!/bin/bash
+
 # Simple script to upgrade the Kubernetes Operator Tutorial to a new version of Kubebuilder.
 
-set -e  # Exit immediately if a command exits with a non-zero status.
-set -o pipefail  # Pipefail option to catch errors in pipelines.
+# Exit immediately if a command exits with a non-zero status.
+set -e
+# Pipefail option to catch errors in pipelines.
+set -o pipefail
 
 # Function to download and install the latest version of Kubebuilder.
 install_kubebuilder() {
@@ -58,13 +61,13 @@ wait_for_user_confirmation() {
 }
 
 # Main script execution.
+install_kubebuilder
+
 if [ "$#" -ne 1 ]; then
   echo "Usage: $0 <project_name>"
   exit 1
 fi
 project_name=$1
-
-install_kubebuilder
 scaffold_project "$project_name"
 
 # Print some directives for the user.
@@ -76,7 +79,6 @@ EOF
 
 wait_for_user_confirmation
 
-# Generate manifests.
 echo "Generating manifests..."
 make manifests
 
