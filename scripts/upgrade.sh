@@ -74,7 +74,7 @@ scaffold_project "$project_name"
 cat <<EOF
 TODO: Implement the Foo CRD (<FooSpec> and <FooStatus>)
 TODO: Implement the controller (RBAC permissions, reconcile and setupWithManager functions)
-NOTE: You may need to resolve some imports such as <corev1>
+TODO: Resolve imports such as <corev1>
 EOF
 
 wait_for_user_confirmation
