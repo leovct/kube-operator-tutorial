@@ -30,6 +30,8 @@ scaffold_project() {
 
   find operator-v1 -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md"  -o -name "README.md" -o -name "PROJECT" \) -exec sed -i '' 's/operator-v1/operator/g' {} +
   sed -i '' 's/# operator/# operator-v1/g' operator-v1/README.md
+  cp ../operator-v1-old/config/samples/tutorial_v1_foo.yaml config/samples
+  cp ../operator-v1-old/config/samples/pod.yaml config/samples
 
   echo "Project scaffolded successfully."
 }
@@ -68,18 +70,7 @@ wait_for_user_confirmation
 
 # Generate manifests.
 echo "Generating manifests..."
-if make manifests; then
-  echo "Manifests generated successfully."
-else
-  echo "Failed to generate manifests. Exiting."
-  exit 1
-fi
-
-# Print other user directives.
-cat <<EOF
-TODO: Change all occurrences of <operator-v1> to <operator>
-TODO: Make sure to keep the operator-v1 title in <README.md>
-EOF
+make manifests
 
 popd > /dev/null
 echo "Script completed successfully."
