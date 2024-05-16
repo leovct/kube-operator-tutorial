@@ -20,20 +20,22 @@ install_kubebuilder() {
 
 # Function to scaffold the new project.
 scaffold_project() {
-  echo "Scaffolding the new project..."
-  mv operator-v1 operator-v1-old || { echo "Failed to rename existing operator-v1 directory."; exit 1; }
-  mkdir operator-v1
-  pushd operator-v1 > /dev/null
+  local name=$1
+
+  echo "Scaffolding the new project $name..."
+  mv "$name" "${name}-old" || { echo "Failed to rename existing $name directory."; exit 1; }
+  mkdir "$name"
+  pushd "$name" > /dev/null || exit
 
   kubebuilder init --domain my.domain --repo my.domain/tutorial
   kubebuilder create api --group tutorial --version v1 --kind Foo
 
-  find operator-v1 -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md"  -o -name "README.md" -o -name "PROJECT" \) -exec sed -i '' 's/operator-v1/operator/g' {} +
-  sed -i '' 's/# operator/# operator-v1/g' operator-v1/README.md
-  cp ../operator-v1-old/config/samples/tutorial_v1_foo.yaml config/samples
-  cp ../operator-v1-old/config/samples/pod.yaml config/samples
+  find . -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md" -o -name "README.md" -o -name "PROJECT" \) -exec sed -i '' "s/operator-v1/$name/g" {} +
+  sed -i '' "s/# operator/# $name/g" README.md
+  cp "../${name}-old/config/samples/tutorial_v1_foo.yaml" config/samples
+  cp "../${name}-old/config/samples/pod.yaml" config/samples
 
-  echo "Project scaffolded successfully."
+  echo "Project $name scaffolded successfully."
 }
 
 # Function to wait for user confirmation.
@@ -56,8 +58,14 @@ wait_for_user_confirmation() {
 }
 
 # Main script execution.
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <project_name>"
+  exit 1
+fi
+project_name=$1
+
 install_kubebuilder
-scaffold_project
+scaffold_project "$project_name"
 
 # Print some directives for the user.
 cat <<EOF
