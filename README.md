@@ -142,9 +142,9 @@ Note: this is an example with `operator-v1`. Repeat the same steps for all the o
 
 ```bash
 # Scaffold the new projects.
-./scripts/upgrade.sh operator-v1
-./scripts/upgrade.sh operator-v2
-./scripts/upgrade.sh operator-v2-with-tests
+./scripts/bump.sh operator-v1
+./scripts/bump.sh operator-v2
+./scripts/bump.sh operator-v2-with-tests
 
 # Test that the new version works.
 # Note: for this step, you will need a running Kubernetes cluster.
