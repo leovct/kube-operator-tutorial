@@ -30,7 +30,7 @@ scaffold_project() {
   kubebuilder init --domain my.domain --repo my.domain/tutorial
   kubebuilder create api --group tutorial --version v1 --kind Foo
 
-  find . -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md" -o -name "README.md" -o -name "PROJECT" \) -exec sed -i '' "s/operator-v1/$name/g" {} +
+  find . -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md" -o -name "README.md" -o -name "PROJECT" \) -exec sed -i '' "s/$name/operator/g" {} +
   sed -i '' "s/# operator/# $name/g" README.md
   cp "../${name}-old/config/samples/tutorial_v1_foo.yaml" config/samples
   cp "../${name}-old/config/samples/pod.yaml" config/samples
