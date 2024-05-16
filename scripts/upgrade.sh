@@ -27,6 +27,7 @@ scaffold_project() {
 
   kubebuilder init --domain my.domain --repo my.domain/tutorial
   kubebuilder create api --group tutorial --version v1 --kind Foo
+  find operator-v1 -type f \( -name "*.go" -o -name "*.yaml" -o -name "*.md" \) ! -name "README.md" ! -name "PROJECT" -exec sed -i '' 's/operator-v1/operator/g' {} +
 
   echo "Project scaffolded successfully."
 }
@@ -56,7 +57,6 @@ scaffold_project
 
 # Print some directives for the user.
 cat <<EOF
-TODO: Change the <projectName> property to <operator>
 TODO: Implement the Foo CRD (<FooSpec> and <FooStatus>)
 TODO: Implement the controller (RBAC permissions, reconcile and setupWithManager functions)
 NOTE: You may need to resolve some imports such as <corev1>
