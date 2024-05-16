@@ -158,7 +158,7 @@ make run
 
 kubectl apply -k config/samples
 # Check the logs of the controller, it should detect the creation events.
-# Also check the status of the CRDs, they should be empty at this point.
+# Also check the status of the CRDs, it should be empty at this point.
 kubectl describe foos
 
 kubectl apply -f config/samples/pod.yaml
@@ -167,7 +167,7 @@ kubectl apply -f config/samples/pod.yaml
 kubectl describe foos
 
 # Update the pod name from `jack` to `joe`.
-vi config/samples/pod.yaml
+sed -i '' "s/jack/joe/" config/samples/pod.yaml
 kubectl apply -f config/samples/pod.yaml
 # Both CRDs should now have an happy status.
 kubectl describe foos
