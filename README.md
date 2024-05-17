@@ -347,20 +347,18 @@ make install
 kubectl get crds
 make run
 
-cp ../operator-v1-old/config/samples/tutorial_v1_foo.yaml config/samples
 kubectl apply -k config/samples
 # Check the logs of the controller, it should detect the creation events.
-# Also check the status of the CRDs, they should be empty at this point.
+# Also check the status of the CRDs, it should be empty at this point.
 kubectl describe foos
 
-cp ../operator-v1-old/config/samples/pod.yaml config/samples
 kubectl apply -f config/samples/pod.yaml
 # Again, check the logs of the controller, it should throw some logs.
 # The foo-1 CRD should now have an happy status.
 kubectl describe foos
 
 # Update the pod name from `jack` to `joe`.
-vi config/samples/pod.yaml
+sed -i '' "s/jack/joe/" config/samples/pod.yaml
 kubectl apply -f config/samples/pod.yaml
 # Both CRDs should now have an happy status.
 kubectl describe foos
@@ -378,4 +376,11 @@ kind delete cluster --name kind
 # 4) Update the website articles and Medium articles too!
 # - https://leovct.github.io/
 # - https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
+=======
+# Update the website articles and Medium articles too!
+# https://leovct.github.io/
+# https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
+
+# Once you're done, clean up the environment.
+kind delete cluster --name kind
 ```
