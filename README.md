@@ -141,28 +141,10 @@ Simple steps to follow to upgrade the tutorial to the latest `kubebuilder` versi
 Note: this is an example with `operator-v1`. Repeat the same steps for all the other versions of the operator...
 
 ```bash
-# Scaffold the new project.
-mv operator-v1 operator-v1-old
-mkdir operator-v1
-pushd operator-v1
-kubebuilder init --domain my.domain --repo my.domain/tutorial
-kubebuilder create api --group tutorial --version v1 --kind Foo
-# Change the `projectName` property to `operator`.
-vi PROJECT
-
-# Implement the Foo CRD (`FooSpec` and `FooStatus`).
-cat ../operator-v1-old/api/v1/foo_types.go
-vi api/v1/foo_types.go
-
-# Same thing with the controller (RBAC permissions, reconcile and setupWithManager functions).
-# Note: you may need to resolve some imports such as `corev1`.
-cat ../operator-v1-old/internal/controller/foo_controller.go
-vi internal/controller/foo_controller.go
-
-# Generate manifests.
-make manifests
-# Change all occurences of `operator-v1` to `operator`.
-# But make sure to keep the `operator-v1` title in `README.md`.
+# Scaffold the new projects.
+./scripts/bump.sh operator-v1
+./scripts/bump.sh operator-v2
+./scripts/bump.sh operator-v2-with-tests
 
 # Test that the new version works.
 # Note: for this step, you will need a running Kubernetes cluster.
@@ -174,20 +156,18 @@ make install
 kubectl get crds
 make run
 
-cp ../operator-v1-old/config/samples/tutorial_v1_foo.yaml config/samples
 kubectl apply -k config/samples
 # Check the logs of the controller, it should detect the creation events.
-# Also check the status of the CRDs, they should be empty at this point.
+# Also check the status of the CRDs, it should be empty at this point.
 kubectl describe foos
 
-cp ../operator-v1-old/config/samples/pod.yaml config/samples
 kubectl apply -f config/samples/pod.yaml
 # Again, check the logs of the controller, it should throw some logs.
 # The foo-1 CRD should now have an happy status.
 kubectl describe foos
 
 # Update the pod name from `jack` to `joe`.
-vi config/samples/pod.yaml
+sed -i '' "s/jack/joe/" config/samples/pod.yaml
 kubectl apply -f config/samples/pod.yaml
 # Both CRDs should now have an happy status.
 kubectl describe foos
@@ -200,4 +180,7 @@ kubectl describe foos
 # Update the website articles and Medium articles too!
 # https://leovct.github.io/
 # https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
+
+# Once you're done, clean up the environment.
+kind delete cluster --name kind
 ```
