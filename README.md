@@ -376,11 +376,4 @@ kind delete cluster --name kind
 # 4) Update the website articles and Medium articles too!
 # - https://leovct.github.io/
 # - https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
-=======
-# Update the website articles and Medium articles too!
-# https://leovct.github.io/
-# https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
-
-# Once you're done, clean up the environment.
-kind delete cluster --name kind
 ```
