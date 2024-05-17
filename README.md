@@ -1,6 +1,6 @@
 # 🛠️ Build a Kubernetes Operator in 10 minutes
 
-> **👋 The source code has been updated in early January 2024 to use the latest version of kubebuilder ([v3.14.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v3.14.0)). Expect the code to be kept up to date with the latest kubebuilder releases!**
+> **👋 The source code has been updated in May 2024 to use the latest version of kubebuilder ([v3.15.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v3.15.0)). Expect the code to be kept up to date with the latest kubebuilder releases!**
 
 ## Table of Contents
 
@@ -38,77 +38,267 @@ Below are examples of `diff` outputs between different versions of the operator.
 ### `v1` <> `v2`
 
 ```diff
-$ diff -r operator-v1 operator-v2
-diff --color -r operator-v1/README.md operator-v2/README.md
-1c1
-< # operator-v1
----
-> # operator-v2
-diff --color -r operator-v1/api/v1/foo_types.go operator-v2/api/v1/foo_types.go
+$ diff --exclude=bin --exclude=README.md -r operator-v1 operator-v2
+diff --color --exclude=bin --exclude=README.md -r operator-v1/api/v1/foo_types.go operator-v2/api/v1/foo_types.go
 33a34,36
 >
 > 	// Foo's favorite colour
 > 	Colour string `json:"colour,omitempty"`
-Only in operator-v2/bin: k8s
-Only in operator-v1/bin: kustomize
-Binary files operator-v1/bin/manager and operator-v2/bin/manager differ
-Only in operator-v2/bin: setup-envtest
-diff --color -r operator-v1/config/crd/bases/tutorial.my.domain_foos.yaml operator-v2/config/crd/bases/tutorial.my.domain_foos.yaml
-45a46,48
+diff --color --exclude=bin --exclude=README.md -r operator-v1/config/crd/bases/tutorial.my.domain_foos.yaml operator-v2/config/crd/bases/tutorial.my.domain_foos.yaml
+50a51,53
 >               colour:
 >                 description: Foo's favorite colour
 >                 type: string
-Only in operator-v2: cover.out
 Only in operator-v2/internal: color
-diff --color -r operator-v1/internal/controller/foo_controller.go operator-v2/internal/controller/foo_controller.go
+diff --color --exclude=bin --exclude=README.md -r operator-v1/internal/controller/foo_controller.go operator-v2/internal/controller/foo_controller.go
 31a32
 > 	"my.domain/tutorial/internal/color"
 76a78
 > 	foo.Status.Colour = color.ConvertStrToColor(foo.Name + foo.Namespace)
-diff --color -r operator-v1/internal/controller/suite_test.go operator-v2/internal/controller/suite_test.go
-66c66
-< 			fmt.Sprintf("1.28.3-%s-%s", runtime.GOOS, runtime.GOARCH)),
----
-> 			fmt.Sprintf("1.28.0-%s-%s", runtime.GOOS, runtime.GOARCH)),
 ```
 
 ### `v2` <> `v2-with-tests`
 
 ```diff
-$ diff -r operator-v2 operator-v2-with-tests
-diff --color -r operator-v2/README.md operator-v2-with-tests/README.md
-1c1
-< # operator-v2
----
-> # operator-v2-with-tests
-Binary files operator-v2/bin/manager and operator-v2-with-tests/bin/manager differ
+$ diff --exclude=bin --exclude=README.md -r operator-v2 operator-v2-with-tests
 Only in operator-v2-with-tests/internal/color: color_test.go
-Only in operator-v2-with-tests/internal/controller: foo_controller_test.go
-diff --color -r operator-v2/internal/controller/suite_test.go operator-v2-with-tests/internal/controller/suite_test.go
+diff --color --exclude=bin --exclude=README.md -r operator-v2/internal/controller/foo_controller_test.go operator-v2-with-tests/internal/controller/foo_controller_test.go
+24,26d23
+< 	"k8s.io/apimachinery/pkg/api/errors"
+< 	"k8s.io/apimachinery/pkg/types"
+< 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+27a25
+> 	corev1 "k8s.io/api/core/v1"
+29c27
+<
+---
+> 	"k8s.io/apimachinery/pkg/types"
+33,35c31
+< var _ = Describe("Foo Controller", func() {
+< 	Context("When reconciling a resource", func() {
+< 		const resourceName = "test-resource"
+---
+> var _ = Describe("Foo controller", func() {
+37c33,35
+< 		ctx := context.Background()
+---
+> 	const (
+> 		foo1Name   = "foo-1"
+> 		foo1Friend = "jack"
+39,43c37,38
+< 		typeNamespacedName := types.NamespacedName{
+< 			Name:      resourceName,
+< 			Namespace: "default", // TODO(user):Modify as needed
+< 		}
+< 		foo := &tutorialv1.Foo{}
+---
+> 		foo2Name   = "foo-2"
+> 		foo2Friend = "joe"
+45,52c40,88
+< 		BeforeEach(func() {
+< 			By("creating the custom resource for the Kind Foo")
+< 			err := k8sClient.Get(ctx, typeNamespacedName, foo)
+< 			if err != nil && errors.IsNotFound(err) {
+< 				resource := &tutorialv1.Foo{
+< 					ObjectMeta: metav1.ObjectMeta{
+< 						Name:      resourceName,
+< 						Namespace: "default",
+---
+> 		namespace = "default"
+> 	)
+>
+> 	Context("When setting up the test environment", func() {
+> 		It("Should create Foo custom resources", func() {
+> 			By("Creating a first Foo custom resource")
+> 			ctx := context.Background()
+> 			foo1 := tutorialv1.Foo{
+> 				ObjectMeta: metav1.ObjectMeta{
+> 					Name:      foo1Name,
+> 					Namespace: namespace,
+> 				},
+> 				Spec: tutorialv1.FooSpec{
+> 					Name: foo1Friend,
+> 				},
+> 			}
+> 			Expect(k8sClient.Create(ctx, &foo1)).Should(Succeed())
+>
+> 			By("Creating another Foo custom resource")
+> 			foo2 := tutorialv1.Foo{
+> 				ObjectMeta: metav1.ObjectMeta{
+> 					Name:      foo2Name,
+> 					Namespace: namespace,
+> 				},
+> 				Spec: tutorialv1.FooSpec{
+> 					Name: foo2Friend,
+> 				},
+> 			}
+> 			Expect(k8sClient.Create(ctx, &foo2)).Should(Succeed())
+> 		})
+> 	})
+>
+> 	Context("When creating a pod with the same name as one of the Foo custom resources' friends", func() {
+> 		It("Should update the status of the first Foo custom resource", func() {
+> 			By("Creating the pod")
+> 			ctx := context.Background()
+> 			pod := corev1.Pod{
+> 				ObjectMeta: metav1.ObjectMeta{
+> 					Name:      foo1Friend,
+> 					Namespace: namespace,
+> 				},
+> 				Spec: corev1.PodSpec{
+> 					Containers: []corev1.Container{
+> 						{
+> 							Name:    "ubuntu",
+> 							Image:   "ubuntu:latest",
+> 							Command: []string{"sleep"},
+> 							Args:    []string{"infinity"},
+> 						},
+54c90,102
+< 					// TODO(user): Specify other spec details if needed.
+---
+> 				},
+> 			}
+> 			Expect(k8sClient.Create(ctx, &pod)).Should(Succeed())
+>
+> 			By("Updating the status of the first Foo custom resource")
+> 			var foo1 tutorialv1.Foo
+> 			foo1Request := types.NamespacedName{
+> 				Name:      foo1Name,
+> 				Namespace: namespace,
+> 			}
+> 			Eventually(func() bool {
+> 				if err := k8sClient.Get(ctx, foo1Request, &foo1); err != nil {
+> 					return false
+56c104,111
+< 				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
+---
+> 				return foo1.Status.Happy
+> 			}).Should(BeTrue())
+>
+> 			By("Not updating the status of the other Foo custom resource")
+> 			var foo2 tutorialv1.Foo
+> 			foo2Request := types.NamespacedName{
+> 				Name:      foo2Name,
+> 				Namespace: namespace,
+57a113,118
+> 			Consistently(func() bool {
+> 				if err := k8sClient.Get(ctx, foo2Request, &foo2); err != nil {
+> 					return false
+> 				}
+> 				return foo2.Status.Happy
+> 			}).Should(BeFalse())
+58a120
+> 	})
+60,64c122,131
+< 		AfterEach(func() {
+< 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
+< 			resource := &tutorialv1.Foo{}
+< 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
+< 			Expect(err).NotTo(HaveOccurred())
+---
+> 	Context("When updating the name of a Foo custom resource's friend", func() {
+> 		It("Should update the status of the Foo custom resource", func() {
+> 			By("Getting the second Foo custom resource")
+> 			ctx := context.Background()
+> 			var foo2 tutorialv1.Foo
+> 			foo2Request := types.NamespacedName{
+> 				Name:      foo2Name,
+> 				Namespace: namespace,
+> 			}
+> 			Expect(k8sClient.Get(ctx, foo2Request, &foo2)).To(Succeed())
+66,67c133,156
+< 			By("Cleanup the specific resource instance Foo")
+< 			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
+---
+> 			By("Updating the name of a Foo custom resource's friend")
+> 			foo2.Spec.Name = foo1Friend
+> 			Expect(k8sClient.Update(ctx, &foo2)).To(Succeed())
+>
+> 			By("Updating the status of the other Foo custom resource")
+> 			Eventually(func() bool {
+> 				if err := k8sClient.Get(ctx, foo2Request, &foo2); err != nil {
+> 					return false
+> 				}
+> 				return foo2.Status.Happy
+> 			}).Should(BeTrue())
+>
+> 			By("Not updating the status of the first Foo custom resource")
+> 			var foo1 tutorialv1.Foo
+> 			foo1Request := types.NamespacedName{
+> 				Name:      foo1Name,
+> 				Namespace: namespace,
+> 			}
+> 			Consistently(func() bool {
+> 				if err := k8sClient.Get(ctx, foo1Request, &foo1); err != nil {
+> 					return false
+> 				}
+> 				return foo1.Status.Happy
+> 			}).Should(BeTrue())
+69,73c158,168
+< 		It("should successfully reconcile the resource", func() {
+< 			By("Reconciling the created resource")
+< 			controllerReconciler := &FooReconciler{
+< 				Client: k8sClient,
+< 				Scheme: k8sClient.Scheme(),
+---
+> 	})
+>
+> 	Context("When deleting a pod with the same name as one of the Foo custom resourcess' friends", func() {
+> 		It("Should update the status of the first Foo custom resource", func() {
+> 			By("Deleting the pod")
+> 			ctx := context.Background()
+> 			pod := corev1.Pod{
+> 				ObjectMeta: metav1.ObjectMeta{
+> 					Name:      foo1Friend,
+> 					Namespace: namespace,
+> 				},
+74a170
+> 			Expect(k8sClient.Delete(ctx, &pod)).Should(Succeed())
+76,81c172,196
+< 			_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{
+< 				NamespacedName: typeNamespacedName,
+< 			})
+< 			Expect(err).NotTo(HaveOccurred())
+< 			// TODO(user): Add more specific assertions depending on your controller's reconciliation logic.
+< 			// Example: If you expect a certain status condition after reconciliation, verify it here.
+---
+> 			By("Updating the status of the first Foo custom resource")
+> 			var foo1 tutorialv1.Foo
+> 			foo1Request := types.NamespacedName{
+> 				Name:      foo1Name,
+> 				Namespace: namespace,
+> 			}
+> 			Eventually(func() bool {
+> 				if err := k8sClient.Get(ctx, foo1Request, &foo1); err != nil {
+> 					return false
+> 				}
+> 				return foo1.Status.Happy
+> 			}).Should(BeFalse())
+>
+> 			By("Updating the status of the other Foo custom resource")
+> 			var foo2 tutorialv1.Foo
+> 			foo2Request := types.NamespacedName{
+> 				Name:      foo2Name,
+> 				Namespace: namespace,
+> 			}
+> 			Consistently(func() bool {
+> 				if err := k8sClient.Get(ctx, foo2Request, &foo2); err != nil {
+> 					return false
+> 				}
+> 				return foo2.Status.Happy
+> 			}).Should(BeFalse())
+diff --color --exclude=bin --exclude=README.md -r operator-v2/internal/controller/suite_test.go operator-v2-with-tests/internal/controller/suite_test.go
 19a20
 > 	"context"
 24a26,27
 > 	ctrl "sigs.k8s.io/controller-runtime"
 >
-42,44c45,51
-< var cfg *rest.Config
-< var k8sClient client.Client
-< var testEnv *envtest.Environment
----
-> var (
-> 	cfg       *rest.Config
-> 	k8sClient client.Client
-> 	testEnv   *envtest.Environment
-> 	ctx       context.Context
-> 	cancel    context.CancelFunc
-> )
-53a61
+44a48,49
+> var ctx context.Context
+> var cancel context.CancelFunc
+53a59
 > 	ctx, cancel = context.WithCancel(context.TODO())
-66c74
-< 			fmt.Sprintf("1.28.0-%s-%s", runtime.GOOS, runtime.GOARCH)),
----
-> 			fmt.Sprintf("1.28.3-%s-%s", runtime.GOOS, runtime.GOARCH)),
-83a92,108
+83a90,106
 > 	// Register and start the Foo controller
 > 	k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{
 > 		Scheme: scheme.Scheme,
@@ -126,7 +316,7 @@ diff --color -r operator-v2/internal/controller/suite_test.go operator-v2-with-t
 > 		err = k8sManager.Start(ctx)
 > 		Expect(err).ToNot(HaveOccurred(), "failed to run manager")
 > 	}()
-86a112
+86a110
 > 	cancel()
 ```
 
@@ -141,12 +331,13 @@ Simple steps to follow to upgrade the tutorial to the latest `kubebuilder` versi
 Note: this is an example with `operator-v1`. Repeat the same steps for all the other versions of the operator...
 
 ```bash
-# Scaffold the new projects.
+# 1) Scaffold the projects.
 ./scripts/bump.sh operator-v1
 ./scripts/bump.sh operator-v2
 ./scripts/bump.sh operator-v2-with-tests
 
-# Test that the new version works.
+
+# 2) Test that the new version works.
 # Note: for this step, you will need a running Kubernetes cluster.
 kind create cluster
 kubectl cluster-info --context kind-kind
@@ -175,8 +366,17 @@ kubectl delete pod jack --force
 # Only the foo-2 CRD should have an empty status.
 kubectl describe foos
 
-# Now compare the diffs between the new and the old projects.
+# Once you're done, clean up the environment.
+kind delete cluster --name kind
+
+# 3) Compare the diffs between the new and the old projects.
 # Also make sure to compare diffs between projects and keep the `README` updated!
+
+
+# 4) Update the website articles and Medium articles too!
+# - https://leovct.github.io/
+# - https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
+=======
 # Update the website articles and Medium articles too!
 # https://leovct.github.io/
 # https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
