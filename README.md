@@ -372,8 +372,9 @@ kind delete cluster --name kind
 # 3) Compare the diffs between the new and the old projects.
 # Also make sure to compare diffs between projects and keep the `README` updated!
 
+# 4) Release a new tag!
 
-# 4) Update the website articles and Medium articles too!
+# 5) Update the website articles and Medium articles too!
 # - https://leovct.github.io/
 # - https://medium.com/@leovct/list/kubernetes-operators-101-dcfcc4cb52f6
 ```
