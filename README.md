@@ -336,9 +336,10 @@ Note: this is an example with `operator-v1`. Repeat the same steps for all the o
 ./scripts/bump.sh operator-v2
 ./scripts/bump.sh operator-v2-with-tests
 
-
-# 2) Test that the new version works.
+# 2) Test that the new version works (for each folder: operator-v1, operator-v2 and operator-v2-with-tests).
 # Note: for this step, you will need a running Kubernetes cluster.
+make test
+
 kind create cluster
 kubectl cluster-info --context kind-kind
 kubectl get nodes
