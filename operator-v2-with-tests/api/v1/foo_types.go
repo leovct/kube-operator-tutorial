@@ -36,8 +36,8 @@ type FooStatus struct {
 	Colour string `json:"colour,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // Foo is the Schema for the foos API
 type Foo struct {
@@ -48,7 +48,7 @@ type Foo struct {
 	Status FooStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // FooList contains a list of Foo
 type FooList struct {

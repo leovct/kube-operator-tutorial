@@ -1,6 +1,6 @@
 # 🛠️ Build a Kubernetes Operator in 10 minutes
 
-> **👋 The source code has been updated in May 2024 to use the latest version of kubebuilder ([v3.15.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v3.15.0)). Expect the code to be kept up to date with the latest kubebuilder releases!**
+> **👋 The source code has been updated in October 2024 to use the latest version of kubebuilder ([v4.2.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v4.2.0)). Expect the code to be kept up to date with the latest kubebuilder releases!**
 
 ## Table of Contents
 
@@ -336,9 +336,10 @@ Note: this is an example with `operator-v1`. Repeat the same steps for all the o
 ./scripts/bump.sh operator-v2
 ./scripts/bump.sh operator-v2-with-tests
 
-
-# 2) Test that the new version works.
+# 2) Test that the new version works (for each folder: operator-v1, operator-v2 and operator-v2-with-tests).
 # Note: for this step, you will need a running Kubernetes cluster.
+make test
+
 kind create cluster
 kubectl cluster-info --context kind-kind
 kubectl get nodes

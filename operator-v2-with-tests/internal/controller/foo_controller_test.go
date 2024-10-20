@@ -21,15 +21,15 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"k8s.io/apimachinery/pkg/types"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
+
 	tutorialv1 "my.domain/tutorial/api/v1"
 )
 
-var _ = Describe("Foo controller", func() {
-
+var _ = Describe("Foo Controller", func() {
 	const (
 		foo1Name   = "foo-1"
 		foo1Friend = "jack"
