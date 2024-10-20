@@ -44,7 +44,7 @@ type FooReconciler struct {
 // +kubebuilder:rbac:groups=tutorial.my.domain,resources=foos/finalizers,verbs=update
 
 // RBAC permissions to monitor pods.
-//+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
+// +kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
